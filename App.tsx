@@ -4,16 +4,14 @@ import ImageGenerator from './components/ImageGenerator';
 import LoadingIndicator from './components/LoadingIndicator';
 import GalleryView from './components/GalleryView';
 import Footer from './components/Footer';
-import TopBar from './components/TopBar';
 import AuthModal from './components/AuthModal';
 import AssetsView from './components/AssetsView';
 import AdminView from './components/AdminView';
-// FIX: Import the 'Hero' component which was missing, causing a compile error.
 import Hero from './components/Hero';
 import { generateVideoFromPrompt, generateImagesFromPrompt } from './services/geminiService';
 import { LOADING_MESSAGES } from './constants';
 import { translations } from './translations';
-import { DownloadIcon, SpeakerOnIcon, SpeakerOffIcon, LayoutGridIcon, LayoutListIcon } from './components/icons';
+import { DownloadIcon, SpeakerOnIcon, SpeakerOffIcon, ImageIcon } from './components/icons';
 
 export interface Asset {
   id: string;
@@ -66,6 +64,8 @@ const App: React.FC = () => {
 
 
     const t = translations[language];
+    const imageGeneratorTranslations = { ...t.imageCreation, ...t.imageGenerator };
+
 
     // Check for saved user session on initial load
     useEffect(() => {
@@ -323,6 +323,7 @@ const App: React.FC = () => {
     };
 
     const renderVideoView = () => (
+        <>
         <div className="flex-grow flex flex-col justify-center">
             <Hero 
                 prompt={videoPrompt} 
@@ -391,6 +392,11 @@ const App: React.FC = () => {
                 )}
             </div>
         </div>
+        <Footer 
+            copyright={t.footer.copyright}
+            links={t.footer.links}
+        />
+        </>
     );
 
     const renderImageView = () => (
@@ -404,7 +410,7 @@ const App: React.FC = () => {
                     isLoading={isImgLoading}
                     isAuthenticated={isAuthenticated}
                     onRequestAuth={() => handleOpenAuthModal('login')}
-                    translations={t.imageCreation}
+                    translations={imageGeneratorTranslations}
                     numberOfImages={numberOfImages}
                     setNumberOfImages={setNumberOfImages}
                     aspectRatio={aspectRatio}
@@ -413,99 +419,110 @@ const App: React.FC = () => {
             </div>
 
             {/* Right Panel */}
-            <div className="flex-1 flex flex-col bg-[#101010]">
-                 <header className="flex justify-end items-center p-4 space-x-4 flex-shrink-0">
-                    <div className="flex items-center space-x-2 text-sm">
-                        <span className="w-5 h-5 bg-pink-500 rounded-full"></span>
-                        <span className="font-bold">0</span>
-                    </div>
-                    <button className="text-sm bg-[#333] text-white px-4 py-1.5 rounded-lg hover:bg-[#444]">
-                        {t.imageCreation.subscribeButton}
-                    </button>
-                    <span className="w-px h-6 bg-zinc-700"></span>
-                    {/* Placeholder Icons */}
-                    <div className="w-8 h-8 bg-[#222] rounded-lg"></div>
-                    <div className="w-8 h-8 bg-pink-400 rounded-full text-zinc-800 font-bold flex items-center justify-center">
-                        {currentUser?.email.charAt(0).toUpperCase()}
-                    </div>
-                </header>
-
-                <main className="flex-1 flex flex-col p-6 pt-0 overflow-y-auto">
-                    <div className="flex justify-between items-center mb-4 flex-shrink-0">
-                        <div className="flex items-center space-x-4 text-sm text-zinc-400">
-                             <label className="flex items-center space-x-2 cursor-pointer">
-                                <input type="checkbox" className="bg-zinc-800 border-zinc-600 rounded" />
-                                <span>{t.imageCreation.favorites}</span>
-                            </label>
-                            <span className="text-zinc-600">|</span>
-                            <select className="bg-transparent border-none text-zinc-400 focus:ring-0">
-                                <option>{t.imageCreation.creationType}</option>
-                            </select>
-                        </div>
-                        <div className="flex items-center space-x-2 text-zinc-400">
-                            <LayoutGridIcon className="w-5 h-5 cursor-pointer hover:text-white" />
-                            <LayoutListIcon className="w-5 h-5 cursor-pointer hover:text-white" />
-                        </div>
-                    </div>
-                    
-                    <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 p-3 rounded-lg flex justify-between items-center mb-6 text-sm flex-shrink-0">
-                        <div className="flex items-center space-x-2">
-                           <span className="w-6 h-6 bg-purple-400 rounded-full"></span>
-                           <p className="text-zinc-200">{t.imageCreation.subscribeBanner}</p>
-                        </div>
-                        <button className="bg-white text-black text-xs font-bold px-4 py-2 rounded-lg hover:bg-opacity-90">{t.imageCreation.subscribeButton}</button>
-                    </div>
-
+            <div className="flex-1 flex flex-col bg-zinc-900 p-6 overflow-y-auto">
+                {isImgLoading ? (
                     <div className="flex-grow flex items-center justify-center">
-                        {isImgLoading ? (
-                            <LoadingIndicator message={t.imageGenerator.loadingMessage.replace('{count}', numberOfImages.toString())} />
-                        ) : imgError ? (
-                            <div className="p-4 bg-red-900/50 border border-red-700 text-red-200 rounded-md text-center">
-                                <p className="font-semibold">{t.error.title}</p>
-                                <p>{imgError}</p>
-                            </div>
-                        ) : lastGeneratedImages.length > 0 ? (
-                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                                {lastGeneratedImages.map((asset) => (
-                                    <div key={asset.id} className="group relative rounded-lg overflow-hidden shadow-lg border border-zinc-800">
-                                        <img 
-                                            src={`data:image/png;base64,${asset.data}`}
-                                            alt={`Generated image for prompt: ${asset.prompt}`}
-                                            className="w-full h-full object-cover"
-                                        />
-                                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                            <button
-                                                onClick={() => handleDownloadAsset(asset)}
-                                                className="bg-green-600 text-white px-5 py-2.5 rounded-md font-semibold hover:bg-green-700 transition-all duration-300 inline-flex items-center justify-center space-x-2"
-                                                aria-label={`Download image for ${asset.prompt}`}
-                                            >
-                                                <DownloadIcon />
-                                                <span>{t.imageResult.downloadButton}</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="text-center text-zinc-600">
-                                <p className="mb-4">{t.imageCreation.noGenerations}</p>
-                                <button className="border border-zinc-700 px-4 py-2 rounded-lg text-sm text-zinc-400 hover:bg-zinc-800 hover:border-zinc-600">{t.imageCreation.viewGuide}</button>
-                            </div>
-                        )}
+                        <LoadingIndicator message={t.imageGenerator.loadingMessage.replace('{count}', numberOfImages.toString())} />
                     </div>
-                </main>
+                ) : imgError ? (
+                    <div className="flex-grow flex items-center justify-center">
+                        <div className="p-4 bg-red-900/50 border border-red-700 text-red-200 rounded-md text-center">
+                            <p className="font-semibold">{t.error.title}</p>
+                            <p>{imgError}</p>
+                        </div>
+                    </div>
+                ) : lastGeneratedImages.length > 0 ? (
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                        {lastGeneratedImages.map((asset) => (
+                            <div key={asset.id} className="group relative rounded-lg overflow-hidden shadow-lg border border-zinc-800 aspect-video">
+                                <img 
+                                    src={`data:image/png;base64,${asset.data}`}
+                                    alt={`Generated image for prompt: ${asset.prompt}`}
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <button
+                                        onClick={() => handleDownloadAsset(asset)}
+                                        className="bg-green-600 text-white px-5 py-2.5 rounded-md font-semibold hover:bg-green-700 transition-all duration-300 inline-flex items-center justify-center space-x-2"
+                                        aria-label={`Download image for ${asset.prompt}`}
+                                    >
+                                        <DownloadIcon />
+                                        <span>{t.imageResult.downloadButton}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex-grow flex flex-col items-center justify-center text-center text-zinc-600">
+                        <ImageIcon className="w-24 h-24 mb-6 text-zinc-700" />
+                        <h2 className="text-xl font-semibold text-zinc-400 mb-2">{t.imageCreation.noGenerations}</h2>
+                        <p className="max-w-xs">{t.imageGenerator.subtitle}</p>
+                    </div>
+                )}
             </div>
         </div>
     );
 
 
+    const renderMainContent = () => {
+        switch(activeView) {
+            case 'home':
+            case 'video':
+                return renderVideoView();
+            case 'image':
+                return renderImageView();
+            case 'assets':
+                return (
+                    <>
+                        <AssetsView 
+                            assets={allAssets}
+                            onDelete={handleDeleteAsset}
+                            onDownload={handleDownloadAsset}
+                            translations={t.assetsView}
+                        />
+                        <Footer copyright={t.footer.copyright} links={t.footer.links} />
+                    </>
+                );
+            case 'gallery':
+                return (
+                    <>
+                        <GalleryView translations={t.gallery} />
+                        <Footer copyright={t.footer.copyright} links={t.footer.links} />
+                    </>
+                );
+            case 'admin':
+                if (isAdmin) {
+                    return (
+                       <>
+                         <AdminView 
+                            users={allUsers}
+                            translations={t.adminView}
+                         />
+                         <Footer copyright={t.footer.copyright} links={t.footer.links} />
+                       </>
+                    );
+                }
+                return renderVideoView(); // fallback for non-admins trying to access admin
+            default:
+                return renderVideoView();
+        }
+    };
+
     return (
-        <div className="min-h-screen bg-gray-900 flex text-zinc-300">
+        <div className="min-h-screen bg-zinc-950 flex text-zinc-300">
             <Sidebar 
                 translations={t.sidebar}
                 activeItem={activeView}
                 onNavItemClick={handleNavItemClick}
                 isAdmin={isAdmin}
+                currentUser={currentUser}
+                onLogout={handleLogout}
+                currentLanguage={language}
+                onLanguageChange={setLanguage}
+                onLogin={() => handleOpenAuthModal('login')}
+                onSignUp={() => handleOpenAuthModal('signup')}
+                isAuthenticated={isAuthenticated}
             />
             <AuthModal 
                 isOpen={isAuthModalOpen}
@@ -515,45 +532,9 @@ const App: React.FC = () => {
                 translations={t.auth}
                 onAuthSuccess={handleAuthSuccess}
             />
-            <div className="flex-1 flex flex-col ml-60">
-                 { activeView !== 'image' && (
-                    <TopBar
-                        currentLanguage={language}
-                        onLanguageChange={setLanguage}
-                        onLogin={() => handleOpenAuthModal('login')}
-                        onSignUp={() => handleOpenAuthModal('signup')}
-                        translations={t.auth}
-                        isAuthenticated={isAuthenticated}
-                        currentUser={currentUser}
-                        onLogout={handleLogout}
-                    />
-                 )}
-                <main className="flex-grow flex flex-col">
-                    {['home', 'video'].includes(activeView) && renderVideoView()}
-                    {activeView === 'image' && renderImageView()}
-                    {activeView === 'assets' && 
-                        <AssetsView 
-                            assets={allAssets}
-                            onDelete={handleDeleteAsset}
-                            onDownload={handleDownloadAsset}
-                            translations={t.assetsView}
-                        />
-                    }
-                    {activeView === 'gallery' && <GalleryView translations={t.gallery} />}
-                    {activeView === 'admin' && isAdmin &&
-                        <AdminView 
-                            users={allUsers}
-                            translations={t.adminView}
-                        />
-                    }
-                </main>
-                { activeView !== 'image' && (
-                    <Footer 
-                        copyright={t.footer.copyright}
-                        links={t.footer.links}
-                    />
-                )}
-            </div>
+            <main className="flex-1 flex flex-col ml-60 bg-zinc-900">
+                {renderMainContent()}
+            </main>
         </div>
     );
 };

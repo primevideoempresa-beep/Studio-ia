@@ -68,23 +68,23 @@ const Hero: React.FC<HeroProps> = ({
 
     return (
         <div className="flex-grow flex items-center justify-center p-4">
-            <div className="w-full max-w-2xl">
-                <h1 className="text-4xl md:text-5xl font-bold text-center text-white mb-8">
+            <div className="w-full max-w-3xl">
+                <h1 className="text-4xl md:text-6xl font-bold text-center text-white mb-10">
                     {titleStart}{' '}
-                    <span className="bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
                         {titleGradient}
                     </span>
                 </h1>
 
                 <form
                     onSubmit={handleFormSubmit}
-                    className="relative bg-[#1e1e1e] rounded-2xl p-4 shadow-2xl border border-gray-700/50"
+                    className="relative bg-zinc-800/50 rounded-2xl p-4 shadow-2xl border border-zinc-700/80"
                 >
                     <textarea
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
                         placeholder={placeholder}
-                        className="w-full h-32 bg-transparent text-gray-300 placeholder-gray-500 border-none focus:outline-none focus:ring-0 resize-none text-base p-2"
+                        className="w-full h-32 bg-transparent text-zinc-200 placeholder-zinc-500 border-none focus:outline-none focus:ring-0 resize-none text-lg p-2"
                         disabled={isLoading}
                     />
 
@@ -94,7 +94,7 @@ const Hero: React.FC<HeroProps> = ({
                             <button
                                 type="button"
                                 onClick={onRemoveImage}
-                                className="absolute -top-2 -right-2 bg-gray-900 text-white rounded-full p-0.5 w-6 h-6 flex items-center justify-center leading-none text-sm hover:bg-red-600 transition-colors"
+                                className="absolute -top-2 -right-2 bg-zinc-900 text-white rounded-full p-0.5 w-6 h-6 flex items-center justify-center leading-none text-sm hover:bg-red-600 transition-colors"
                                 aria-label="Remove image"
                             >
                                 &#x2715;
@@ -117,7 +117,7 @@ const Hero: React.FC<HeroProps> = ({
                                 onClick={handleImageIconClick}
                                 title={imageUploadTooltip}
                                 disabled={isLoading}
-                                className="p-2 text-gray-400 hover:text-white rounded-md transition-colors disabled:opacity-50"
+                                className="p-2 text-zinc-400 hover:text-white rounded-md transition-colors disabled:opacity-50"
                                 aria-label={imageUploadTooltip}
                             >
                                 <ImagePlusIcon className="w-6 h-6" />
@@ -127,7 +127,7 @@ const Hero: React.FC<HeroProps> = ({
                         <button
                             type="submit"
                             disabled={isLoading || (isAuthenticated && !prompt.trim() && !imagePreviewUrl)}
-                            className="bg-[#E6D9FF] text-black px-5 py-2.5 rounded-full font-semibold hover:bg-opacity-90 transition-all duration-300 disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center justify-center space-x-2 shrink-0"
+                            className="bg-gradient-to-r from-purple-600 to-blue-500 text-white px-8 py-3 rounded-full font-semibold hover:opacity-90 transition-all duration-300 disabled:bg-zinc-700 disabled:text-zinc-400 disabled:cursor-not-allowed flex items-center justify-center space-x-2 shrink-0 shadow-lg shadow-purple-500/10"
                         >
                             {isLoading ? (
                                 <>

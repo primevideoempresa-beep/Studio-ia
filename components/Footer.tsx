@@ -7,13 +7,13 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({ copyright, links }) => {
     return (
-        <footer className="bg-gray-950/50 border-t border-gray-800 backdrop-blur-sm">
+        <footer className="bg-zinc-950/50 border-t border-zinc-800 backdrop-blur-sm">
             <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-                    <p className="text-gray-400">{copyright.replace('{year}', new Date().getFullYear().toString())}</p>
+                    <p className="text-zinc-400 text-sm">{copyright.replace('{year}', new Date().getFullYear().toString())}</p>
                     <div className="flex space-x-6 mt-4 md:mt-0">
                         {links.map(link => (
-                             <a key={link} href="#" className="text-gray-400 hover:text-white transition-colors">{link}</a>
+                             <a key={link} href="#" className="text-sm text-zinc-400 hover:text-white transition-colors">{link}</a>
                         ))}
                     </div>
                 </div>
