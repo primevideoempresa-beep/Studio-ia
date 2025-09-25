@@ -14,7 +14,6 @@ interface Translation {
             image: string;
             assets: string;
             gallery: string;
-            admin: string;
         };
         hero: {
             titleStart: string;
@@ -85,16 +84,6 @@ interface Translation {
             deleteButton: string;
             downloadButton: string;
         },
-        adminView: {
-            title: string;
-            subtitle: string;
-            totalUsers: string;
-            table: {
-                email: string;
-                registeredAt: string;
-            };
-            noUsers: string;
-        };
         error: {
             title: string;
             prefix: string;
@@ -146,7 +135,6 @@ export const translations: Translation = {
             image: "Image",
             assets: "Assets",
             gallery: "Gallery",
-            admin: "Admin",
         },
         hero: {
             titleStart: "Transform",
@@ -223,16 +211,6 @@ export const translations: Translation = {
             deleteButton: "Delete Asset",
             downloadButton: "Download Asset",
         },
-        adminView: {
-            title: "User Management",
-            subtitle: "View and manage all registered users.",
-            totalUsers: "Total Users",
-            table: {
-                email: "Email",
-                registeredAt: "Registered At",
-            },
-            noUsers: "No users have registered yet.",
-        },
         error: {
             title: "Error",
             prefix: "Failed to generate video.",
@@ -281,7 +259,6 @@ export const translations: Translation = {
             image: "Imagen",
             assets: "Activos",
             gallery: "Galería",
-            admin: "Admin",
         },
         hero: {
             titleStart: "Transformar",
@@ -358,16 +335,6 @@ export const translations: Translation = {
             deleteButton: "Eliminar Activo",
             downloadButton: "Descargar Activo",
         },
-        adminView: {
-            title: "Gestión de Usuarios",
-            subtitle: "Ver y gestionar todos los usuarios registrados.",
-            totalUsers: "Total de Usuarios",
-            table: {
-                email: "Correo Electrónico",
-                registeredAt: "Fecha de Registro",
-            },
-            noUsers: "Aún no se han registrado usuarios.",
-        },
         error: {
             title: "Error",
             prefix: "Error al generar el video.",
@@ -416,7 +383,6 @@ export const translations: Translation = {
             image: "Image",
             assets: "Actifs",
             gallery: "Galerie",
-            admin: "Admin",
         },
         hero: {
             titleStart: "Transformer",
@@ -493,16 +459,6 @@ export const translations: Translation = {
             deleteButton: "Supprimer l'Actif",
             downloadButton: "Télécharger l'Actif",
         },
-        adminView: {
-            title: "Gestion des Utilisateurs",
-            subtitle: "Voir et gérer tous les utilisateurs enregistrés.",
-            totalUsers: "Nombre total d'utilisateurs",
-            table: {
-                email: "E-mail",
-                registeredAt: "Date d'inscription",
-            },
-            noUsers: "Aucun utilisateur n'est encore enregistré.",
-        },
         error: {
             title: "Erreur",
             prefix: "Échec de la génération de la vidéo.",
@@ -551,7 +507,6 @@ export const translations: Translation = {
             image: "Imagem",
             assets: "Ativos",
             gallery: "Galeria",
-            admin: "Admin",
         },
         hero: {
             titleStart: "Transformar",
@@ -627,16 +582,6 @@ export const translations: Translation = {
             noAssetsMessage: "Comece a criar vídeos ou imagens para vê-los aqui.",
             deleteButton: "Excluir Ativo",
             downloadButton: "Baixar Ativo",
-        },
-        adminView: {
-            title: "Gerenciamento de Usuários",
-            subtitle: "Visualize e gerencie todos os usuários cadastrados.",
-            totalUsers: "Total de Usuários",
-            table: {
-                email: "E-mail",
-                registeredAt: "Data de Cadastro",
-            },
-            noUsers: "Nenhum usuário se cadastrou ainda.",
         },
         error: {
             title: "Erro",

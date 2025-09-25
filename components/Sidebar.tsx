@@ -1,5 +1,5 @@
 import React from 'react';
-import { HomeIcon, VideoIcon, ImageIcon, AssetsIcon, GalleryIcon, UsersIcon, SettingsIcon, UserIcon, ChevronsLeftIcon } from './icons';
+import { HomeIcon, VideoIcon, ImageIcon, AssetsIcon, GalleryIcon, SettingsIcon, UserIcon, ChevronsLeftIcon } from './icons';
 import { User } from '../App';
 import UserProfile from './UserProfile';
 import LanguageSelector from './LanguageSelector';
@@ -12,11 +12,9 @@ interface SidebarProps {
         image: string;
         assets: string;
         gallery: string;
-        admin: string;
     };
     activeItem: string;
     onNavItemClick: (itemId: string) => void;
-    isAdmin: boolean;
     currentUser: User | null;
     isAuthenticated: boolean;
     onLogout: () => void;
@@ -71,7 +69,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     translations, 
     activeItem, 
     onNavItemClick, 
-    isAdmin,
     currentUser,
     isAuthenticated,
     onLogout,
@@ -93,10 +90,6 @@ const Sidebar: React.FC<SidebarProps> = ({
         { id: 'assets', name: translations.assets, icon: AssetsIcon, isHot: true },
         { id: 'gallery', name: translations.gallery, icon: GalleryIcon },
     ];
-
-    if (isAdmin) {
-        managementNavItems.push({ id: 'admin', name: translations.admin, icon: UsersIcon });
-    }
 
     return (
         <aside className={`h-screen bg-[#111111] text-gray-300 flex flex-col fixed top-0 left-0 shadow-2xl z-20 border-r border-zinc-800/50 transition-all duration-300 ${isSidebarCollapsed ? 'w-20 p-2' : 'w-60 p-4'}`}>

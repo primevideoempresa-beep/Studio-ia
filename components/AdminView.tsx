@@ -1,6 +1,7 @@
 import React from 'react';
 import { User } from '../App';
-import { UsersIcon } from './icons';
+// Fix: Replaced non-existent 'UsersIcon' with 'UserIcon' as suggested by the compilation error.
+import { UserIcon } from './icons';
 
 interface AdminViewProps {
     users: User[];
@@ -39,7 +40,8 @@ const AdminView: React.FC<AdminViewProps> = ({ users, translations }) => {
 
                 <div className="mb-6 bg-gray-800/50 border border-gray-700 p-4 rounded-lg flex items-center space-x-4">
                     <div className="p-3 bg-blue-500/20 rounded-lg">
-                        <UsersIcon className="w-6 h-6 text-blue-400" />
+                        {/* Fix: Replaced non-existent 'UsersIcon' with 'UserIcon'. */}
+                        <UserIcon className="w-6 h-6 text-blue-400" />
                     </div>
                     <div>
                         <p className="text-sm text-gray-400">{translations.totalUsers}</p>
@@ -50,7 +52,8 @@ const AdminView: React.FC<AdminViewProps> = ({ users, translations }) => {
                 <div className="bg-gray-800/50 border border-gray-700 rounded-lg overflow-hidden">
                     {sortedUsers.length === 0 ? (
                         <div className="text-center py-20">
-                            <UsersIcon className="mx-auto h-12 w-12 text-gray-500" />
+                            {/* Fix: Replaced non-existent 'UsersIcon' with 'UserIcon'. */}
+                            <UserIcon className="mx-auto h-12 w-12 text-gray-500" />
                             <p className="mt-4 text-lg text-white">{translations.noUsers}</p>
                         </div>
                     ) : (

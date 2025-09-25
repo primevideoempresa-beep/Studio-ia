@@ -6,7 +6,6 @@ import GalleryView from './components/GalleryView';
 import Footer from './components/Footer';
 import AuthModal from './components/AuthModal';
 import AssetsView from './components/AssetsView';
-import AdminView from './components/AdminView';
 import Hero from './components/Hero';
 import { generateVideoFromPrompt, generateImagesFromPrompt } from './services/geminiService';
 import { LOADING_MESSAGES } from './constants';
@@ -27,8 +26,6 @@ export interface User {
     createdAt: number;
 }
 
-const ADMIN_EMAIL = 'admin@studioia.com';
-
 const App: React.FC = () => {
     // App state
     const [language, setLanguage] = useState<string>('pt');
@@ -37,12 +34,8 @@ const App: React.FC = () => {
     const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
     const [currentUser, setCurrentUser] = useState<User | null>({email: 'p@example.com', createdAt: Date.now()});
-    const [isAdmin, setIsAdmin] = useState<boolean>(false);
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
 
-
-    // User management state
-    const [allUsers, setAllUsers] = useState<User[]>([]);
 
     // Assets state
     const [allAssets, setAllAssets] = useState<Asset[]>([]);
@@ -77,17 +70,12 @@ const App: React.FC = () => {
                 const user: User = JSON.parse(savedUser);
                 setIsAuthenticated(true);
                 setCurrentUser(user);
-                setIsAdmin(user.email === ADMIN_EMAIL);
             } else {
                  // For demo purposes, log in a default user
                 const demoUser = { email: 'p@example.com', createdAt: Date.now() };
                 setIsAuthenticated(true);
                 setCurrentUser(demoUser);
                 localStorage.setItem('studioIaCurrentUser', JSON.stringify(demoUser));
-            }
-            const savedAllUsers = localStorage.getItem('studioIaUsers');
-             if (savedAllUsers) {
-                setAllUsers(JSON.parse(savedAllUsers));
             }
         } catch (error) {
             console.error("Failed to parse user from localStorage", error);
@@ -284,25 +272,10 @@ const App: React.FC = () => {
     };
     
     const handleAuthSuccess = (email: string, mode: 'login' | 'signup') => {
-        const usersFromStorage = localStorage.getItem('studioIaUsers');
-        let currentUsers: User[] = usersFromStorage ? JSON.parse(usersFromStorage) : [];
-        
-        let user = currentUsers.find(u => u.email === email);
-
-        if (!user) {
-            // If user doesn't exist, create them (for both login and signup in this simple case)
-            user = { email, createdAt: Date.now() };
-            currentUsers.push(user);
-            localStorage.setItem('studioIaUsers', JSON.stringify(currentUsers));
-            setAllUsers(currentUsers);
-        }
-        
-        if (user) {
-            localStorage.setItem('studioIaCurrentUser', JSON.stringify(user));
-            setIsAuthenticated(true);
-            setCurrentUser(user);
-            setIsAdmin(user.email === ADMIN_EMAIL);
-        }
+        const user: User = { email, createdAt: Date.now() };
+        localStorage.setItem('studioIaCurrentUser', JSON.stringify(user));
+        setIsAuthenticated(true);
+        setCurrentUser(user);
     };
 
 
@@ -310,17 +283,9 @@ const App: React.FC = () => {
         localStorage.removeItem('studioIaCurrentUser');
         setIsAuthenticated(false);
         setCurrentUser(null);
-        setIsAdmin(false);
-        if (activeView === 'admin') {
-            setActiveView('home');
-        }
     };
 
     const handleNavItemClick = (viewId: string) => {
-        if (viewId === 'admin' && !isAdmin) {
-            setActiveView('home'); // Redirect non-admins
-            return;
-        }
         setActiveView(viewId);
     };
     
@@ -498,19 +463,6 @@ const App: React.FC = () => {
                         <Footer copyright={t.footer.copyright} links={t.footer.links} />
                     </>
                 );
-            case 'admin':
-                if (isAdmin) {
-                    return (
-                       <>
-                         <AdminView 
-                            users={allUsers}
-                            translations={t.adminView}
-                         />
-                         <Footer copyright={t.footer.copyright} links={t.footer.links} />
-                       </>
-                    );
-                }
-                return renderVideoView(); // fallback for non-admins trying to access admin
             default:
                 return renderVideoView();
         }
@@ -522,7 +474,6 @@ const App: React.FC = () => {
                 translations={t.sidebar}
                 activeItem={activeView}
                 onNavItemClick={handleNavItemClick}
-                isAdmin={isAdmin}
                 currentUser={currentUser}
                 onLogout={handleLogout}
                 currentLanguage={language}
