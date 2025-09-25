@@ -7,9 +7,10 @@ interface UserProfileProps {
     translations: {
         logout: string;
     };
+    isCollapsed: boolean;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({ email, onLogout, translations }) => {
+const UserProfile: React.FC<UserProfileProps> = ({ email, onLogout, translations, isCollapsed }) => {
     const [isOpen, setIsOpen] = useState(false);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const userInitial = email ? email.charAt(0).toUpperCase() : '?';
@@ -30,7 +31,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ email, onLogout, translations
         <div className="relative" ref={wrapperRef}>
             {isOpen && (
                 <div
-                    className="absolute right-0 bottom-full mb-2 w-full bg-zinc-800 border border-zinc-700 rounded-md shadow-lg py-1 z-20"
+                    className="absolute right-0 bottom-full mb-2 w-52 bg-zinc-800 border border-zinc-700 rounded-md shadow-lg py-1 z-20"
                     role="menu"
                     aria-orientation="vertical"
                 >
@@ -50,7 +51,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ email, onLogout, translations
             )}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center w-full text-left p-2 rounded-lg hover:bg-zinc-800/60 transition-colors"
+                className={`flex items-center w-full text-left p-2 rounded-lg hover:bg-zinc-800/60 transition-colors ${isCollapsed ? 'justify-center' : ''}`}
                 aria-haspopup="true"
                 aria-expanded={isOpen}
                 aria-label="Open user menu"
@@ -58,10 +59,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ email, onLogout, translations
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-600 to-blue-500 flex-shrink-0 flex items-center justify-center font-bold text-white">
                     {userInitial}
                 </div>
-                <div className="ml-2.5 flex-1 overflow-hidden">
-                    <p className="text-sm font-semibold text-zinc-200 truncate">{email}</p>
-                </div>
-                <ChevronUpIcon className={`w-4 h-4 text-zinc-400 transition-transform duration-200 ${isOpen ? 'rotate-0' : 'rotate-180'}`} />
+                {!isCollapsed &&
+                    <>
+                        <div className="ml-2.5 flex-1 overflow-hidden">
+                            <p className="text-sm font-semibold text-zinc-200 truncate">{email}</p>
+                        </div>
+                        <ChevronUpIcon className={`w-4 h-4 text-zinc-400 transition-transform duration-200 ${isOpen ? 'rotate-0' : 'rotate-180'}`} />
+                    </>
+                }
             </button>
         </div>
     );

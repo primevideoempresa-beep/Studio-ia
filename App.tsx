@@ -38,6 +38,8 @@ const App: React.FC = () => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
     const [currentUser, setCurrentUser] = useState<User | null>({email: 'p@example.com', createdAt: Date.now()});
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+
 
     // User management state
     const [allUsers, setAllUsers] = useState<User[]>([]);
@@ -321,6 +323,11 @@ const App: React.FC = () => {
         }
         setActiveView(viewId);
     };
+    
+    const handleToggleSidebar = () => {
+        setIsSidebarCollapsed(prev => !prev);
+    };
+
 
     const renderVideoView = () => (
         <>
@@ -523,6 +530,8 @@ const App: React.FC = () => {
                 onLogin={() => handleOpenAuthModal('login')}
                 onSignUp={() => handleOpenAuthModal('signup')}
                 isAuthenticated={isAuthenticated}
+                isSidebarCollapsed={isSidebarCollapsed}
+                onToggleSidebar={handleToggleSidebar}
             />
             <AuthModal 
                 isOpen={isAuthModalOpen}
@@ -532,7 +541,7 @@ const App: React.FC = () => {
                 translations={t.auth}
                 onAuthSuccess={handleAuthSuccess}
             />
-            <main className="flex-1 flex flex-col ml-60 bg-zinc-900">
+            <main className={`flex-1 flex flex-col bg-zinc-900 transition-all duration-300 ${isSidebarCollapsed ? 'ml-20' : 'ml-60'}`}>
                 {renderMainContent()}
             </main>
         </div>
